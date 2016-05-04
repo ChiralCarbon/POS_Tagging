@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -13,13 +14,13 @@ import java.util.*;
 @SuppressWarnings("MalformedRegex")
 public class DataReader {
     private List<String> stringList;
-    public DataReader(String url){
+    public DataReader(Path url){
         stringList = new ArrayList<String>();
         loadFile(url);
     }
-    public void loadFile(String url){
+    public void loadFile(Path url){
         try {
-            Scanner input = new Scanner(new File(url));
+            Scanner input = new Scanner(url.toFile());
             while (input.hasNext()){
                 String s = input.next();
                 stringList.add(s);
@@ -38,6 +39,16 @@ public class DataReader {
         }
         return res;
     }
+
+    public Set<String> getAllWordTypes(){
+        Set<String> res = new HashSet<>();
+        for(String curStr:stringList){
+            String[] parts = curStr.split("/");
+            res.add(parts[1]);
+        }
+        return res;
+    }
+
     public List<String> getWords(){
         List<String> res= new ArrayList<String>();
         for(String curStr:stringList){
@@ -47,5 +58,17 @@ public class DataReader {
         return res;
     }
 
+
+    public Map<String,Map<String,Float>> getWeights() {
+        Map<String,Map<String,Float>> res= new HashMap<>();
+        for (String curStr:stringList) {
+            String[] parts = curStr.split("/");
+            Map<String,Float> curMap = new HashMap<>();
+            if(parts.length ==2) {
+                res.put(curStr,curMap);
+            }
+        }
+         return res;
+    }
 
 }
